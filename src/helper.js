@@ -60,7 +60,17 @@ function surroundBombs(arr = grid()) {
         }
         count = 0;
     }));
+
     return result
+}
+
+//onject created
+function objectGrid(arr) {
+    return arr.map(el => el.map(e => ({
+        item: e,
+        isRevealed: false,
+        isBomb: e === '✳'
+    })));
 }
 
 export { surroundBombs, grid }; 
