@@ -64,7 +64,7 @@ function surroundBombs(arr = grid()) {
     return result
 }
 
-//onject created
+//onject created not used yet
 function objectGrid(arr) {
     return arr.map(el => el.map(e => ({
         item: e,
