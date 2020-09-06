@@ -1,0 +1,50 @@
+.Cell {
+    display: flex;
+    width: 1em;
+    height: 1em;
+    padding: 2px;
+    border: 0.3px solid black;
+    align-items: center;
+    justify-content: center;
+}
+
+.Cell img {
+    width: 1em;
+    height: 1em;
+}
+
+.blue {
+    color: blue;
+}
+
+.crimson{
+    color: crimson;
+}
+
+.red{
+    color: red;
+}
+
+.brown{
+    color: brown;
+}
+
+.darkred{
+    color: darkred;
+}
+
+.purple{
+    color: purple;
+}
+
+.darkblue{
+    color: darkblue;
+}
+
+.orange{
+    color: orange;
+}
+
+.darkolivegreen{
+    color: darkolivegreen;
+}

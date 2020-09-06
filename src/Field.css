@@ -1,0 +1,29 @@
+.Field-grid{
+    background-color: lightgray;
+    border: 2px solid gray;
+    width: fit-content;   
+    margin: 0 auto; 
+}
+
+.Menu-mines, .Menu-face, .Menu-timer{
+    display: inline-block;
+}
+
+.Menu-mines, .Menu-timer{
+    background-color: black;
+    border: 2px solid gray;
+    color: red;
+}
+
+.Field-menu{
+    background-color: lightsteelblue;
+    border: 2px solid black;
+    width: fit-content; 
+    margin: 0 auto;
+}
+
+.Field-row {
+    display: flex;
+    flex-direction: row;
+
+}
