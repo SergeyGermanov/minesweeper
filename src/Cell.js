@@ -22,7 +22,9 @@ class Cell extends Component {
                 data-row={this.props.dataRow}
                 data-cell={this.props.dataCell}
                 onClick={this.props.handleClick}
-                className={`Cell ${this.props.colors[this.props.container]} ${this.props.isRevealed && 'uncover'} ${this.props.isBoom && 'boom'}`}
+                className={`Cell ${this.props.colors[this.props.container]} 
+                                 ${this.props.isRevealed && 'uncover'} 
+                                 ${this.props.isBoom && 'boom'}`}
             >
                 <span
                     data-row={this.props.dataRow}
@@ -33,7 +35,8 @@ class Cell extends Component {
                         <img
                             data-row={this.props.dataRow}
                             data-cell={this.props.dataCell}
-                            src='mine-ico.png' />
+                            src='mine-ico.png'
+                        />
                         : this.props.container !== 0 && this.props.container}
                 </span>
             </div>
