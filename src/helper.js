@@ -69,8 +69,9 @@ function objectGrid(arr) {
     return arr.map(el => el.map(e => ({
         item: e,
         isRevealed: false,
-        isBomb: e === '✳'
+        isBomb: e === '✳',
+        isBoom: false
     })));
 }
 
-export { surroundBombs, grid }; 
+export { surroundBombs, grid, objectGrid }; 

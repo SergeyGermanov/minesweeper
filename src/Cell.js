@@ -18,8 +18,24 @@ class Cell extends Component {
     }
     render() {
         return (
-            <div className={`Cell ${this.props.colors[this.props.container]}`}>
-                {this.props.container === '✳' ? <img src='mine-ico.png' /> : this.props.container !== 0 && this.props.container}
+            <div
+                data-row={this.props.dataRow}
+                data-cell={this.props.dataCell}
+                onClick={this.props.handleClick}
+                className={`Cell ${this.props.colors[this.props.container]} ${this.props.isRevealed && 'uncover'} ${this.props.isBoom && 'boom'}`}
+            >
+                <span
+                    data-row={this.props.dataRow}
+                    data-cell={this.props.dataCell}
+                    className={`${!this.props.isRevealed && 'cover'}`}
+                >
+                    {this.props.container === '✳' ?
+                        <img
+                            data-row={this.props.dataRow}
+                            data-cell={this.props.dataCell}
+                            src='mine-ico.png' />
+                        : this.props.container !== 0 && this.props.container}
+                </span>
             </div>
         );
     }

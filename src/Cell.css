@@ -6,6 +6,23 @@
     border: 0.3px solid black;
     align-items: center;
     justify-content: center;
+    
+}
+
+/* .Cell:hover {
+ background-color: lightgray;
+} */
+
+.cover {
+    visibility: hidden;
+}
+
+.uncover{
+    background-color: lightgray;
+}
+
+.boom{
+    background-color: red;
 }
 
 .Cell img {
