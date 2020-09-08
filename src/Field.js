@@ -18,12 +18,12 @@ class Field extends Component {
 
 
     updateGrid() {
-        let newGrid = objectGrid(surroundBombs(grid(40, 15, 15)));
+        let newGrid = objectGrid(surroundBombs(grid(10, 15, 15)));
         this.setState(curState => ({ grid: [...newGrid], boom: false }));
     }
 
     makeVisible(row, cell) {
-        let newGrid = this.state.grid;
+        let newGrid = [...this.state.grid];
         if (!newGrid[row][cell].isRevealed) {
 
             newGrid[row][cell].isRevealed = true;
@@ -33,11 +33,28 @@ class Field extends Component {
                 newGrid.map(el => el.map(e => e.isBomb ? e.isRevealed = true : e));
             }
 
+            //reveale full row of the empty click
             if (newGrid[row][cell].item === 0) {
-                //reveale full row of the empty click
-                newGrid[row].map(el => !el.isBomb ? el.isRevealed = true : el);
-                //reveale full column of the empty click
-                newGrid.map(el => el.map((e, i) => el[i] === el[cell] && !e.isBomb ? e.isRevealed = true : e));
+                //arr of indexes for begining and end of empty spaces
+                let idxs = [];
+                //push index for the right side
+                newGrid[row].map((el, i) => (el.item > 0 && !el.isBomb && i > cell) && idxs.push(i));
+                //destruct/destroy the index array and create variable with the right index
+                let [rightIdx] = idxs;
+                console.log(rightIdx + ' right index');
+                idxs.length = 0;
+
+                //reverser array and find the left index for empty space and push it to idxs array
+                newGrid[row].reverse().map((el, i, arr) => (el.item > 0 && !el.isBomb && i > arr.length - 1 - cell) && idxs.push(i));
+                //reverse back to normal
+                newGrid[row].reverse();
+                //convert index to a normal not reversed
+                let leftIdx = newGrid[row].length - 1 - (idxs[0] || newGrid[row].length - 1);
+                console.log(idxs[0] + ' idxs index');
+                console.log(leftIdx + ' left index');
+
+                //update the key of isRevealed to true for the cells surrounding the clicked one
+                newGrid[row].map((el, i, arr) => i >= (leftIdx || 0) && i <= (rightIdx || arr.length - 1) ? el.isRevealed = true : el);
             }
 
             this.setState(curState => ({ grid: [...newGrid], boom: newGrid[row][cell].isBoom }));
