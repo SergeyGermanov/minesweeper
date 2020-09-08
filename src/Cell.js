@@ -4,16 +4,14 @@ import './Cell.css';
 class Cell extends Component {
     static defaultProps = {
         colors: {
-            '0': 'no-color',
-            '1': 'blue',
-            '2': 'crimson',
-            '3': 'red',
-            '4': 'brown',
-            '5': 'darkred',
-            '6': 'purple',
-            '7': 'darkblue',
-            '8': 'orange',
-            '✳': 'darkolivegreen'
+            '1': 'one',
+            '2': 'two',
+            '3': 'three',
+            '4': 'four',
+            '5': 'five',
+            '6': 'six',
+            '7': 'seven',
+            '8': 'eight',
         }
     }
     render() {

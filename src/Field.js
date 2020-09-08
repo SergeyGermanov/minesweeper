@@ -18,7 +18,7 @@ class Field extends Component {
 
 
     updateGrid() {
-        let newGrid = objectGrid(surroundBombs(grid(10, 15, 15)));
+        let newGrid = objectGrid(surroundBombs(grid(70, 15, 15)));
         this.setState(curState => ({ grid: [...newGrid], boom: false }));
     }
 

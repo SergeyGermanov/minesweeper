@@ -1,6 +1,6 @@
 .Field-grid{
-    background-color: gray;
-    border: 2px solid gray;
+    background-color: rgb(167, 167, 167);
+    border: 5px solid rgb(123, 123, 123);
     width: fit-content;   
     margin: 0 auto; 
 }

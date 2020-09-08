@@ -3,10 +3,10 @@
     width: 1em;
     height: 1em;
     padding: 2px;
-    border: 0.3px solid black;
+    border: 0.5px solid rgb(123, 123, 123);
     align-items: center;
     justify-content: center;
-    
+    font-weight: bolder;
 }
 
 .cover {
@@ -14,50 +14,47 @@
 }
 
 .uncover{
-    background-color: lightgray;
+    background-color: rgb(189, 189, 189);
 }
 
 .boom{
-    background-color: red;
+    background-color: rgb(255, 0, 0);
 }
 
 .Cell img {
+    padding-top: 0.3em;
     width: 1em;
     height: 1em;
 }
 
-.blue {
-    color: blue;
+.one {
+    color: rgb(0, 0, 255);
 }
 
-.crimson{
-    color: crimson;
+.two{
+    color: rgb(0, 123, 0);
 }
 
-.red{
-    color: red;
+.three{
+    color: rgb(255, 0, 0);
 }
 
-.brown{
-    color: brown;
+.four{
+    color: rgb(0, 0, 123);
 }
 
-.darkred{
-    color: darkred;
+.five{
+    color: rgb(123, 0, 0);
 }
 
-.purple{
-    color: purple;
+.six{
+    color: rgb(0, 123, 123);
 }
 
-.darkblue{
-    color: darkblue;
+.seven{
+    color: rgb(0, 0, 0);
 }
 
-.orange{
-    color: orange;
-}
-
-.darkolivegreen{
-    color: darkolivegreen;
+.eight{
+    color: rgb(123, 123, 123);
 }
