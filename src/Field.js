@@ -27,10 +27,19 @@ class Field extends Component {
         if (!newGrid[row][cell].isRevealed) {
 
             newGrid[row][cell].isRevealed = true;
+
             if (newGrid[row][cell].isBomb) {
                 newGrid[row][cell].isBoom = true
                 newGrid.map(el => el.map(e => e.isBomb ? e.isRevealed = true : e));
             }
+
+            if (newGrid[row][cell].item === 0) {
+                //reveale full row of the empty click
+                newGrid[row].map(el => !el.isBomb ? el.isRevealed = true : el);
+                //reveale full column of the empty click
+                newGrid.map(el => el.map((e, i) => el[i] === el[cell] && !e.isBomb ? e.isRevealed = true : e));
+            }
+
             this.setState(curState => ({ grid: [...newGrid], boom: newGrid[row][cell].isBoom }));
         }
     }
