@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './Field.css';
 import Cell from './Cell';
-import { surroundBombs, grid, objectGrid } from './helper';
+import { surroundBombs, grid, objectGrid, horzReveal } from './helper';
 
 class Field extends Component {
     constructor(props) {
@@ -18,7 +18,7 @@ class Field extends Component {
 
 
     updateGrid() {
-        let newGrid = objectGrid(surroundBombs(grid(70, 15, 15)));
+        let newGrid = objectGrid(surroundBombs(grid(20, 15, 15)));
         this.setState(curState => ({ grid: [...newGrid], boom: false }));
     }
 
@@ -33,28 +33,44 @@ class Field extends Component {
                 newGrid.map(el => el.map(e => e.isBomb ? e.isRevealed = true : e));
             }
 
-            //reveale full row of the empty click
+            //reveale full row of the empty click 
+
+            //////reveal one line and still cannot open full down!!!!
             if (newGrid[row][cell].item === 0) {
-                //arr of indexes for begining and end of empty spaces
-                let idxs = [];
-                //push index for the right side
-                newGrid[row].map((el, i) => (el.item > 0 && !el.isBomb && i > cell) && idxs.push(i));
-                //destruct/destroy the index array and create variable with the right index
-                let [rightIdx] = idxs;
-                console.log(rightIdx + ' right index');
-                idxs.length = 0;
+                // horzReveal(newGrid[row], cell);
+                horzReveal(newGrid[row], cell);
 
-                //reverser array and find the left index for empty space and push it to idxs array
-                newGrid[row].reverse().map((el, i, arr) => (el.item > 0 && !el.isBomb && i > arr.length - 1 - cell) && idxs.push(i));
-                //reverse back to normal
-                newGrid[row].reverse();
-                //convert index to a normal not reversed
-                let leftIdx = newGrid[row].length - 1 - (idxs[0] || newGrid[row].length - 1);
-                console.log(idxs[0] + ' idxs index');
-                console.log(leftIdx + ' left index');
+                let r = +row + 1;
 
-                //update the key of isRevealed to true for the cells surrounding the clicked one
-                newGrid[row].map((el, i, arr) => i >= (leftIdx || 0) && i <= (rightIdx || arr.length - 1) ? el.isRevealed = true : el);
+
+
+
+                while (r <= newGrid.length - 1) {
+
+                    let idxes = newGrid[row].map((el, i) => el.isRevealed && i).filter(e => e);
+                    let downEmpty = newGrid[r].map((el, i) => el.item === 0 && i).filter(e => e);
+                    let toOpen = downEmpty.filter(el => idxes.includes(el));
+
+                    console.log('after break');
+
+                    let c = toOpen.shift();
+
+                    while (toOpen.length !== 0) {
+                        if (newGrid[r][c].item === 0) {
+                            horzReveal(newGrid[r], c);
+                        }
+                        c = toOpen.shift();
+                    }
+                    if (toOpen.length === 0) {
+                        r = newGrid.length;
+                    } else {
+                        r++;
+                    }
+
+                }
+
+
+
             }
 
             this.setState(curState => ({ grid: [...newGrid], boom: newGrid[row][cell].isBoom }));

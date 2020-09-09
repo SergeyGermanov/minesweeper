@@ -74,4 +74,26 @@ function objectGrid(arr) {
     })));
 }
 
-export { surroundBombs, grid, objectGrid }; 
+function horzReveal(arrRow, cell) {
+    if (typeof arrRow !== 'undefined') {
+        //arr of indexes for begining and end of empty spaces
+        let idxs = [];
+        //push index for the right side
+        arrRow.map((el, i) => (el.item > 0 && !el.isBomb && i > cell) && idxs.push(i));
+        //destruct/destroy the index array and create variable with the right index
+        let [rightIdx] = idxs;
+        idxs.length = 0;
+
+        //reverser array and find the left index for empty space and push it to idxs array
+        arrRow.reverse().map((el, i, a) => (el.item > 0 && !el.isBomb && i > a.length - 1 - cell) && idxs.push(i));
+        //reverse back to normal
+        arrRow.reverse();
+        //convert index to a normal not reversed
+        let leftIdx = arrRow.length - 1 - (idxs[0] || arrRow.length - 1);
+        //update the key of isRevealed to true for the cells surrounding the clicked one
+        arrRow.map((el, i, a) => i >= (leftIdx || 0) && i <= (rightIdx || a.length - 1) ? el.isRevealed = true : el);
+    }
+}
+
+
+export { surroundBombs, grid, objectGrid, horzReveal }; 
