@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './Field.css';
 import Cell from './Cell';
-import { surroundBombs, grid, objectGrid, horzReveal } from './helper';
+import { surroundBombs, grid, objectGrid, revealBombs, reveal } from './helper';
 
 class Field extends Component {
     constructor(props) {
@@ -26,53 +26,19 @@ class Field extends Component {
         let newGrid = [...this.state.grid];
         if (!newGrid[row][cell].isRevealed) {
 
-            newGrid[row][cell].isRevealed = true;
+            // newGrid[row][cell].isRevealed = true;
 
-            if (newGrid[row][cell].isBomb) {
-                newGrid[row][cell].isBoom = true
-                newGrid.map(el => el.map(e => e.isBomb ? e.isRevealed = true : e));
-            }
+            revealBombs(newGrid, newGrid[row][cell]);
+            reveal(newGrid, row, cell);
 
             //reveale full row of the empty click 
 
             //////reveal one line and still cannot open full down!!!!
-            if (newGrid[row][cell].item === 0) {
-                // horzReveal(newGrid[row], cell);
-                horzReveal(newGrid[row], cell);
-
-                let r = +row + 1;
+            // if (newGrid[row][cell].item === 0) {
 
 
 
-
-                while (r <= newGrid.length - 1) {
-
-                    let idxes = newGrid[row].map((el, i) => el.isRevealed && i).filter(e => e);
-                    let downEmpty = newGrid[r].map((el, i) => el.item === 0 && i).filter(e => e);
-                    let toOpen = downEmpty.filter(el => idxes.includes(el));
-
-                    console.log('after break');
-
-                    let c = toOpen.shift();
-
-                    while (toOpen.length !== 0) {
-                        if (newGrid[r][c].item === 0) {
-                            horzReveal(newGrid[r], c);
-                        }
-                        c = toOpen.shift();
-                    }
-                    if (toOpen.length === 0) {
-                        r = newGrid.length;
-                    } else {
-                        r++;
-                    }
-
-                }
-
-
-
-            }
-
+            // }
             this.setState(curState => ({ grid: [...newGrid], boom: newGrid[row][cell].isBoom }));
         }
     }
