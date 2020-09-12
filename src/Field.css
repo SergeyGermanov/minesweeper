@@ -17,7 +17,7 @@
 
 .Field-menu{
     background-color: lightsteelblue;
-    border: 2px solid black;
+    /* border: 2px solid black; */
     width: fit-content; 
     margin: 0 auto;
 }
@@ -25,5 +25,4 @@
 .Field-row {
     display: flex;
     flex-direction: row;
-
 }

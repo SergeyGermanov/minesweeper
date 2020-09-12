@@ -8,62 +8,55 @@ class Field extends Component {
         super(props);
         this.state = {
             grid: objectGrid(surroundBombs()),
-            boom: false
+            boom: false,
+            mines: 5,
+            time: 0
         }
 
         this.handleClickMenu = this.handleClickMenu.bind(this);
         this.handleClick = this.handleClick.bind(this)
     }
 
-
-
-    updateGrid() {
-        let newGrid = objectGrid(surroundBombs(grid(20, 15, 15)));
-        this.setState(curState => ({ grid: [...newGrid], boom: false }));
+    //creating new grid and updating it
+    updateGrid(num, h, w) {
+        console.log(num);
+        let newGrid = objectGrid(surroundBombs(grid(num, h, w)));
+        this.setState(curState => ({ grid: [...newGrid], mines: num, boom: false }));
     }
 
     makeVisible(row, cell) {
         let newGrid = [...this.state.grid];
         if (!newGrid[row][cell].isRevealed) {
-
-            // newGrid[row][cell].isRevealed = true;
-
             revealBombs(newGrid, newGrid[row][cell]);
             reveal(newGrid, row, cell);
-
-            //reveale full row of the empty click 
-
-            //////reveal one line and still cannot open full down!!!!
-            // if (newGrid[row][cell].item === 0) {
-
-
-
-            // }
             this.setState(curState => ({ grid: [...newGrid], boom: newGrid[row][cell].isBoom }));
         }
     }
 
     handleClickMenu(e) {
-        this.updateGrid();
+        this.updateGrid(50);
+
     }
 
     handleClick(e) {
         !this.state.boom && this.makeVisible(e.target.dataset.row, e.target.dataset.cell);
+
     }
 
     render() {
         return (
             <div className="Field">
                 <h1>Minesweeper</h1>
-                <div className="Field-menu">
-                    <div className="Menu-mines">10</div>
-                    <div className="Menu-face" onClick={this.handleClickMenu}>
-                        😊
-                    {/* 😲😣⛳ */}
-                    </div>
-                    <div className="Menu-timer">00</div>
-                </div>
+
                 <div className="Field-grid">
+                    <div className="Field-menu">
+                        <div className="Menu-mines">{this.state.mines}</div>
+                        <div className="Menu-face" onClick={this.handleClickMenu}>
+                            😊
+                    {/* 😲😣⛳ */}
+                        </div>
+                        <div className="Menu-timer">{this.state.time}</div>
+                    </div>
                     {this.state.grid.map((el, idx) =>
                         <div key={`row${idx}`} className={'Field-row'}>{el.map((e, i) =>
                             <Cell

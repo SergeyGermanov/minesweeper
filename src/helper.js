@@ -1,5 +1,7 @@
 // version 0.2 (grid made with nested for loop; grid shows how many bombs around)
 
+
+
 //create bobms array
 function createArr(bombs, height, width) {
     let gridCells = height * width - bombs;
@@ -74,6 +76,7 @@ function objectGrid(arr) {
     })));
 }
 
+//game over reveal all bombs
 function revealBombs(arr, item) {
     if (item.isBomb) {
         item.isBoom = true;
@@ -81,27 +84,26 @@ function revealBombs(arr, item) {
     }
 }
 
-function floodReveal(newGrid, row, cell) {
+//reveal empty cells around
+function floodReveal(arr, row, cell) {
     for (let i = -1; i <= 1; i++) {
         for (let j = -1; j <= 1; j++) {
             let y = +row + i;
             let x = +cell + j;
-
-            if (y > -1 && y < newGrid.length - 1 && x > -1 && j < newGrid[row].length - 1) {
-                let neighbor = newGrid[y][x];
+            if (y > -1 && y <= arr.length - 1 && x > -1 && x <= arr[y].length - 1) {
+                let neighbor = arr[y][x];
                 if (!neighbor.isBomb && !neighbor.isRevealed) {
-                    neighbor.isRevealed = true;
+                    reveal(arr, y, x);
                 }
             }
         }
     }
 }
 
+//reveal the cell and start recursion of floodreveal
 function reveal(arr, row, cell) {
     arr[row][cell].isRevealed = true;
-    if (arr[row][cell].item === 0) {
-        floodReveal(arr, row, cell);
-    }
+    arr[row][cell].item === 0 && floodReveal(arr, row, cell);
 }
 
 
