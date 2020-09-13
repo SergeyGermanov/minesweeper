@@ -1,26 +1,27 @@
 import React, { Component } from 'react';
 import './Field.css';
 import Cell from './Cell';
-import { surroundBombs, grid, objectGrid, revealBombs, reveal } from './helper';
+import { grid, objectGrid, revealBombs, reveal } from './helper';
 
 class Field extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            grid: objectGrid(surroundBombs()),
+            grid: objectGrid(grid()),
             boom: false,
             mines: 5,
             time: 0
         }
 
         this.handleClickMenu = this.handleClickMenu.bind(this);
-        this.handleClick = this.handleClick.bind(this)
+        this.handleClick = this.handleClick.bind(this);
+
     }
 
     //creating new grid and updating it
     updateGrid(num, h, w) {
-        console.log(num);
-        let newGrid = objectGrid(surroundBombs(grid(num, h, w)));
+        console.log(num + ' upgradeGrid');
+        let newGrid = objectGrid(grid(num, h, w));
         this.setState(curState => ({ grid: [...newGrid], mines: num, boom: false }));
     }
 
@@ -34,8 +35,10 @@ class Field extends Component {
     }
 
     handleClickMenu(e) {
-        this.updateGrid(50);
-
+        console.log(this.state.mines + ' handleClick');
+        //only updates the latest vetsion of state in updateGrid
+        //I have to send it as an argument to the function or find the way to setState all the changes
+        this.updateGrid(this.state.mines + 10);
     }
 
     handleClick(e) {

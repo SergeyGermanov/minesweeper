@@ -3,10 +3,10 @@
 
 
 //create bobms array
-function createArr(bombs, height, width) {
-    let gridCells = height * width - bombs;
-    return [...Array.from({ length: bombs }, x => '✳'), ...Array.from({ length: gridCells }, o => 0)];
-}
+// function createArr(bombs, height, width) {
+//     let gridCells = height * width - bombs;
+//     return [...Array.from({ length: bombs }, x => '✳'), ...Array.from({ length: gridCells }, o => 0)];
+// }
 
 //shuffle bombs inside array randomly
 function shuffle(arr) {
@@ -19,13 +19,16 @@ function shuffle(arr) {
 
 //shuffle grid array creation
 function grid(bombs = 10, height = 9, width = 9) {
-    let arr = createArr(bombs, height, width);
+    let gridCells = height * width - bombs;
+    let arr = [...Array.from({ length: bombs }, x => '✳'), ...Array.from({ length: gridCells }, o => 0)];
     let shuffleArr = shuffle(arr);
-    return Array.from({ length: height }, _ => Array.from({ length: width }, _ => shuffleArr.pop()));
+    let grid = Array.from({ length: height }, _ => Array.from({ length: width }, _ => shuffleArr.pop()));
+
+    return surroundBombs(grid);
 }
 
 //show a number of bombs around this cell
-function surroundBombs(arr = grid()) {
+function surroundBombs(arr) {
     let result = [...arr];
     let count = 0;
     result.forEach((el, idx, arr) => el.forEach((e, i) => {
@@ -109,4 +112,4 @@ function reveal(arr, row, cell) {
 
 
 
-export { surroundBombs, grid, objectGrid, revealBombs, reveal }; 
+export { grid, objectGrid, revealBombs, reveal }; 
