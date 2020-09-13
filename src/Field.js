@@ -50,12 +50,12 @@ class Field extends Component {
 
                 <div className="Field-grid">
                     <div className="Field-menu">
-                        <div className="Menu-mines">{this.state.mines}</div>
+                        <div className="Menu-mines">{String(this.state.mines).padStart(3, '0')}</div>
                         <div className="Menu-face" onClick={this.handleClickMenu}>
                             😊
                     {/* 😲😣⛳ */}
                         </div>
-                        <div className="Menu-timer">{this.state.time}</div>
+                        <div className="Menu-timer">{String(this.state.time).padStart(3, '0')}</div>
                     </div>
                     {this.state.grid.map((el, idx) =>
                         <div key={`row${idx}`} className={'Field-row'}>{el.map((e, i) =>
