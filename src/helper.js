@@ -1,13 +1,3 @@
-// version 0.2 (grid made with nested for loop; grid shows how many bombs around)
-
-
-
-//create bobms array
-// function createArr(bombs, height, width) {
-//     let gridCells = height * width - bombs;
-//     return [...Array.from({ length: bombs }, x => '✳'), ...Array.from({ length: gridCells }, o => 0)];
-// }
-
 //shuffle bombs inside array randomly
 function shuffle(arr) {
     for (let i = arr.length - 1; i > 0; i--) {
@@ -81,10 +71,10 @@ function objectGrid(arr) {
 
 //game over reveal all bombs
 function revealBombs(arr, item) {
-    if (item.isBomb) {
-        item.isBoom = true;
-        arr.map(el => el.map(e => e.isBomb ? e.isRevealed = true : e));
-    }
+    // if (item.isBomb) {
+    item.isBoom = true;
+    arr.map(el => el.map(e => e.isBomb ? e.isRevealed = true : e));
+    // }
 }
 
 //reveal empty cells around
@@ -108,8 +98,5 @@ function reveal(arr, row, cell) {
     arr[row][cell].isRevealed = true;
     arr[row][cell].item === 0 && floodReveal(arr, row, cell);
 }
-
-
-
 
 export { grid, objectGrid, revealBombs, reveal }; 

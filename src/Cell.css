@@ -1,7 +1,7 @@
 .Cell {
     display: flex;
-    width: 1em;
-    height: 1em;
+    width: 10px;
+    height: 10px;
     padding: 2px;
     border: 0.5px solid rgb(123, 123, 123);
     align-items: center;
@@ -22,9 +22,9 @@
 }
 
 .Cell img {
-    padding-top: 0.3em;
-    width: 1em;
-    height: 1em;
+    padding-bottom: 2px;
+    width: 10px;
+    height: 10px;
 }
 
 .one {

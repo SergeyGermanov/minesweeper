@@ -1,33 +1,41 @@
 import React, { Component } from 'react';
 import './Field.css';
 import Cell from './Cell';
+import Settings from './Settings';
 import { grid, objectGrid, revealBombs, reveal } from './helper';
 
 class Field extends Component {
+    static defaultProps = {
+        beginner: { mines: 9, width: 9, height: 9 },
+        intermediate: { mines: 40, width: 16, height: 16 },
+        expert: { mines: 99, width: 30, height: 16 }
+    }
     constructor(props) {
         super(props);
         this.state = {
             grid: objectGrid(grid()),
             boom: false,
-            mines: 5,
+            mines: 9,
             time: 0,
-            timer: false
+            timer: false,
+            level: 'beginner'
         }
 
         this.handleClickMenu = this.handleClickMenu.bind(this);
         this.handleClick = this.handleClick.bind(this);
-
+        this.handleLevel = this.handleLevel.bind(this);
     }
 
     //creating new grid and updating it
-    updateGrid(num, h, w) {
-        console.log(num + ' upgradeGrid');
-        let newGrid = objectGrid(grid(num, h, w));
-        this.setState(curState => ({ grid: [...newGrid], mines: num, boom: false }));
+    updateGrid(mines, height, width) {
+        console.log(mines + ' upgradeGrid');
+        let level = mines === 9 ? 'beginner' : mines === 40 ? 'intermediate' : 'expert';
+        let newGrid = objectGrid(grid(mines, height, width));
+        this.setState(curState => ({ grid: [...newGrid], mines: mines, boom: false, level: level }));
     }
 
     // 
-    makeTimer = () => {
+    startTimer = () => {
         this.interval = setInterval(() => {
             this.setState(curState => ({ time: curState.time + 1 }));
         }, 1000);
@@ -36,38 +44,50 @@ class Field extends Component {
 
     stopTimer() {
         clearInterval(this.interval);
-        this.setState({ timer: false, time: 0 });
+        this.setState({ timer: false });
     }
 
     makeVisible(row, cell) {
         let newGrid = [...this.state.grid];
         if (!newGrid[row][cell].isRevealed) {
-
-            revealBombs(newGrid, newGrid[row][cell]);
+            if (newGrid[row][cell].isBomb) {
+                this.stopTimer();
+                revealBombs(newGrid, newGrid[row][cell]);
+            }
             reveal(newGrid, row, cell);
             this.setState(curState => ({ grid: [...newGrid], boom: newGrid[row][cell].isBoom }));
         }
     }
 
     handleClickMenu(e) {
-        console.log(this.state.mines + ' handleClick');
-        //only updates the latest vetsion of state in updateGrid
-        //I have to send it as an argument to the function or find the way to setState all the changes
         this.stopTimer();
-        this.updateGrid(this.state.mines);
+        this.setState({ time: 0 });
+        console.log(this.props['expert']);
+        let level = this.props[this.state.level];
+        this.updateGrid(level.mines, level.height, level.width);
     }
 
     handleClick(e) {
-        !this.state.timer && this.makeTimer();
+        !this.state.timer && this.startTimer();
         !this.state.boom && this.makeVisible(e.target.dataset.row, e.target.dataset.cell);
+    }
 
+    levelChange(mines, height, width) {
+        this.stopTimer();
+        this.setState({ time: 0 });
+        this.updateGrid(mines, height, width);
+    }
+
+    handleLevel(e) {
+        let obj = this.props[e.target.dataset.level];
+        this.levelChange(obj.mines, obj.height, obj.width);
     }
 
     render() {
         return (
             <div className="Field">
                 <h1>Minesweeper</h1>
-
+                <Settings handleClick={this.handleLevel} />
                 <div className="Field-grid">
                     <div className="Field-menu">
                         <div className="Menu-mines">{String(this.state.mines).padStart(3, '0')}</div>
