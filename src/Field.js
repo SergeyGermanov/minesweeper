@@ -10,7 +10,8 @@ class Field extends Component {
             grid: objectGrid(grid()),
             boom: false,
             mines: 5,
-            time: 0
+            time: 0,
+            timer: false
         }
 
         this.handleClickMenu = this.handleClickMenu.bind(this);
@@ -25,9 +26,23 @@ class Field extends Component {
         this.setState(curState => ({ grid: [...newGrid], mines: num, boom: false }));
     }
 
+    // 
+    makeTimer = () => {
+        this.interval = setInterval(() => {
+            this.setState(curState => ({ time: curState.time + 1 }));
+        }, 1000);
+        this.setState({ timer: true });
+    }
+
+    stopTimer() {
+        clearInterval(this.interval);
+        this.setState({ timer: false, time: 0 });
+    }
+
     makeVisible(row, cell) {
         let newGrid = [...this.state.grid];
         if (!newGrid[row][cell].isRevealed) {
+
             revealBombs(newGrid, newGrid[row][cell]);
             reveal(newGrid, row, cell);
             this.setState(curState => ({ grid: [...newGrid], boom: newGrid[row][cell].isBoom }));
@@ -38,10 +53,12 @@ class Field extends Component {
         console.log(this.state.mines + ' handleClick');
         //only updates the latest vetsion of state in updateGrid
         //I have to send it as an argument to the function or find the way to setState all the changes
-        this.updateGrid(this.state.mines + 10);
+        this.stopTimer();
+        this.updateGrid(this.state.mines);
     }
 
     handleClick(e) {
+        !this.state.timer && this.makeTimer();
         !this.state.boom && this.makeVisible(e.target.dataset.row, e.target.dataset.cell);
 
     }
