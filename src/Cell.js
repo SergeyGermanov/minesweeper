@@ -20,14 +20,17 @@ class Cell extends Component {
                 data-row={this.props.dataRow}
                 data-cell={this.props.dataCell}
                 onClick={this.props.handleClick}
+                onContextMenu={this.props.flagPut}
                 className={`Cell ${this.props.colors[this.props.container]} 
                                  ${this.props.isRevealed && 'uncover'} 
-                                 ${this.props.isBoom && 'boom'}`}
+                                 ${this.props.isBoom && 'boom'}
+                                 ${this.props.isFlagged && 'flagged'}`
+                }
             >
                 <span
                     data-row={this.props.dataRow}
                     data-cell={this.props.dataCell}
-                    className={`${!this.props.isRevealed && 'cover'}`}
+                    className={`${!this.props.isRevealed && 'cover'} `}
                 >
                     {this.props.container === '✳' ?
                         <img

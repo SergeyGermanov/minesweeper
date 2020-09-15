@@ -8,12 +8,37 @@
     margin: 0 auto; 
 }
 
-.Menu-mines, .Menu-face, .Menu-timer{
+.Menu-mines, .Menu-timer, .Menu-face{
     display: inline-block;
     border-top: 2px solid rgb(252, 252, 252);
     border-left: 2px solid rgb(252, 252, 252);
     border-right: 2px solid rgb(117, 117, 117);
     border-bottom: 2px solid rgb(117, 117, 117);
+}
+
+.Menu-face{
+    padding-top: 3px;
+    background-color: rgb(185, 185, 185);
+    outline: none;   
+}
+
+.Menu-face:active {
+    border-top: 2px solid rgb(117, 117, 117);
+    border-left: 2px solid rgb(117, 117, 117);
+    border-right: 2px solid rgb(252, 252, 252);
+    border-bottom: 2px solid rgb(252, 252, 252);
+}
+
+{/* 😲😣⛳ */}
+.Menu-face::before{
+    content: '😊';
+}
+.Menu-face:active:before{
+    content: '😲';
+}
+
+.dead::before{
+    content: '😣';
 }
 
 .Menu-mines, .Menu-timer{
@@ -35,4 +60,8 @@
 .Field-row {
     display: flex;
     flex-direction: row;
+}
+
+.pressed {
+    border: 0.5px solid rgb(123, 123, 123);
 }

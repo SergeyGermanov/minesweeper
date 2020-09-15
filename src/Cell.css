@@ -27,6 +27,14 @@
     background-color: rgb(255, 0, 0);
 }
 
+.flagged::before{
+
+    content: '⛳';
+    font-size: 0.5rem;
+    position: absolute;
+    /* display: block; */
+}
+
 .Cell img {
     padding-bottom: 2px;
     width: 10px;

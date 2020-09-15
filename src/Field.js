@@ -24,6 +24,7 @@ class Field extends Component {
         this.handleClickMenu = this.handleClickMenu.bind(this);
         this.handleClick = this.handleClick.bind(this);
         this.handleLevel = this.handleLevel.bind(this);
+        this.flagPut = this.flagPut.bind(this);
     }
 
     //creating new grid and updating it
@@ -68,7 +69,7 @@ class Field extends Component {
     }
 
     handleClick(e) {
-        !this.state.timer && this.startTimer();
+        (!this.state.timer && !this.state.boom) && this.startTimer();
         !this.state.boom && this.makeVisible(e.target.dataset.row, e.target.dataset.cell);
     }
 
@@ -83,6 +84,20 @@ class Field extends Component {
         this.levelChange(obj.mines, obj.height, obj.width);
     }
 
+    //put flags
+    flagPut(event) {
+        event.preventDefault();
+        let row = event.target.dataset.row;
+        let cell = event.target.dataset.cell;
+        let grid = [...this.state.grid];
+        if (!grid[row][cell].isFlagged) {
+            grid[row][cell].isFlagged = true;
+        } else {
+            grid[row][cell].isFlagged = false;
+        }
+        this.setState(curState => ({ grid: [...grid] }));
+    }
+
     render() {
         return (
             <div className="Field">
@@ -91,20 +106,19 @@ class Field extends Component {
                 <div className="Field-grid">
                     <div className="Field-menu">
                         <div className="Menu-mines">{String(this.state.mines).padStart(3, '0')}</div>
-                        <div className="Menu-face" onClick={this.handleClickMenu}>
-                            😊
-                    {/* 😲😣⛳ */}
-                        </div>
+                        <button className={`Menu-face ${this.state.boom && 'dead'}`} onClick={this.handleClickMenu} />
                         <div className="Menu-timer">{String(this.state.time).padStart(3, '0')}</div>
                     </div>
                     {this.state.grid.map((el, idx) =>
                         <div key={`row${idx}`} className={'Field-row'}>{el.map((e, i) =>
                             <Cell
+                                flagPut={this.flagPut}
                                 handleClick={this.handleClick}
                                 key={`cell${i}`}
                                 dataRow={idx}
                                 dataCell={i}
                                 isRevealed={e.isRevealed}
+                                isFlagged={e.isFlagged}
                                 isBomb={e.isBomb}
                                 isBoom={e.isBoom}
                                 container={e.item}
