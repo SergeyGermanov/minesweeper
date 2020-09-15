@@ -1,22 +1,32 @@
 .Field-grid{
-    background-color: rgb(167, 167, 167);
-    border: 5px solid rgb(123, 123, 123);
+    background-color: rgb(185, 185, 185);
+    border-top: 2px solid rgb(252, 252, 252);
+    border-left: 2px solid rgb(252, 252, 252);
+    border-right: 2px solid rgb(117, 117, 117);
+    border-bottom: 2px solid rgb(117, 117, 117);
     width: fit-content;   
     margin: 0 auto; 
 }
 
 .Menu-mines, .Menu-face, .Menu-timer{
     display: inline-block;
+    border-top: 2px solid rgb(252, 252, 252);
+    border-left: 2px solid rgb(252, 252, 252);
+    border-right: 2px solid rgb(117, 117, 117);
+    border-bottom: 2px solid rgb(117, 117, 117);
 }
 
 .Menu-mines, .Menu-timer{
     background-color: black;
-    border: 2px solid gray;
+    border-top: 2px solid rgb(252, 252, 252);
+    border-left: 2px solid rgb(252, 252, 252);
+    border-right: 2px solid rgb(117, 117, 117);
+    border-bottom: 2px solid rgb(117, 117, 117);
     color: red;
 }
 
 .Field-menu{
-    background-color: lightsteelblue;
+    background-color: rgb(185, 185, 185);
     /* border: 2px solid black; */
     width: fit-content; 
     margin: 0 auto;

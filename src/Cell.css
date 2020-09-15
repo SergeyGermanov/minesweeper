@@ -1,9 +1,12 @@
 .Cell {
     display: flex;
-    width: 10px;
-    height: 10px;
+    width: 7px;
+    height: 7px;
     padding: 2px;
-    border: 0.5px solid rgb(123, 123, 123);
+    border-top: 2px solid rgb(252, 252, 252);
+    border-left: 2px solid rgb(252, 252, 252);
+    border-right: 2px solid rgb(117, 117, 117);
+    border-bottom: 2px solid rgb(117, 117, 117);
     align-items: center;
     justify-content: center;
     font-weight: bolder;
@@ -14,7 +17,10 @@
 }
 
 .uncover{
-    background-color: rgb(189, 189, 189);
+    background-color: rgb(185, 185, 185);
+    border: 0.5px solid rgb(123, 123, 123);
+    width: 10px;
+    height: 10px;
 }
 
 .boom{
