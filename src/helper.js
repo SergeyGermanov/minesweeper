@@ -71,10 +71,8 @@ function objectGrid(arr) {
 
 //game over reveal all bombs
 function revealBombs(arr, item) {
-    // if (item.isBomb) {
     item.isBoom = true;
-    arr.map(el => el.map(e => e.isBomb ? e.isRevealed = true : e));
-    // }
+    arr.map(el => el.map(e => e.isBomb && !e.isFlagged ? e.isRevealed = true : e));
 }
 
 //reveal empty cells around
@@ -85,7 +83,7 @@ function floodReveal(arr, row, cell) {
             let x = +cell + j;
             if (y > -1 && y <= arr.length - 1 && x > -1 && x <= arr[y].length - 1) {
                 let neighbor = arr[y][x];
-                if (!neighbor.isBomb && !neighbor.isRevealed) {
+                if (!neighbor.isBomb && !neighbor.isRevealed && !neighbor.isFlagged) {
                     reveal(arr, y, x);
                 }
             }

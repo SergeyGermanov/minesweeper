@@ -41,6 +41,10 @@
     content: '😣';
 }
 
+.search::before{
+    content: '😲';
+}
+
 .Menu-mines, .Menu-timer{
     background-color: black;
     border-top: 2px solid rgb(252, 252, 252);

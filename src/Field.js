@@ -18,31 +18,33 @@ class Field extends Component {
             mines: 9,
             time: 0,
             timer: false,
-            level: 'beginner'
+            level: 'beginner',
+            searchingFace: false
         }
 
         this.handleClickMenu = this.handleClickMenu.bind(this);
         this.handleClick = this.handleClick.bind(this);
         this.handleLevel = this.handleLevel.bind(this);
         this.flagPut = this.flagPut.bind(this);
+        this.onMouseDown = this.onMouseDown.bind(this);
+        this.onMouseUp = this.onMouseUp.bind(this);
     }
 
     //creating new grid and updating it
     updateGrid(mines, height, width) {
-        console.log(mines + ' upgradeGrid');
         let level = mines === 9 ? 'beginner' : mines === 40 ? 'intermediate' : 'expert';
         let newGrid = objectGrid(grid(mines, height, width));
         this.setState(curState => ({ grid: [...newGrid], mines: mines, boom: false, level: level }));
     }
 
-    // 
+    // timer start
     startTimer = () => {
         this.interval = setInterval(() => {
             this.setState(curState => ({ time: curState.time + 1 }));
         }, 1000);
         this.setState({ timer: true });
     }
-
+    //stop timer
     stopTimer() {
         clearInterval(this.interval);
         this.setState({ timer: false });
@@ -50,7 +52,7 @@ class Field extends Component {
 
     makeVisible(row, cell) {
         let newGrid = [...this.state.grid];
-        if (!newGrid[row][cell].isRevealed) {
+        if (!newGrid[row][cell].isRevealed && !newGrid[row][cell].isFlagged) {
             if (newGrid[row][cell].isBomb) {
                 this.stopTimer();
                 revealBombs(newGrid, newGrid[row][cell]);
@@ -63,7 +65,6 @@ class Field extends Component {
     handleClickMenu(e) {
         this.stopTimer();
         this.setState({ time: 0 });
-        console.log(this.props['expert']);
         let level = this.props[this.state.level];
         this.updateGrid(level.mines, level.height, level.width);
     }
@@ -85,17 +86,36 @@ class Field extends Component {
     }
 
     //put flags
-    flagPut(event) {
-        event.preventDefault();
-        let row = event.target.dataset.row;
-        let cell = event.target.dataset.cell;
+    flagPut(e) {
+        e.preventDefault();
+        let row = e.target.dataset.row;
+        let cell = e.target.dataset.cell;
         let grid = [...this.state.grid];
-        if (!grid[row][cell].isFlagged) {
-            grid[row][cell].isFlagged = true;
-        } else {
-            grid[row][cell].isFlagged = false;
+        let mines = this.state.mines;
+        let level = this.state.level;
+
+
+        if (!grid[row][cell].isFlagged && !grid[row][cell].isRevealed) {
+            if (mines > 0) {
+                grid[row][cell].isFlagged = true;
+                mines--;
+            }
+        } else if (grid[row][cell].isFlagged && !grid[row][cell].isRevealed) {
+            if (mines < this.props[level].mines) {
+                grid[row][cell].isFlagged = false;
+                mines++;
+            }
         }
-        this.setState(curState => ({ grid: [...grid] }));
+        this.setState(curState => ({ grid: [...grid], mines: mines }));
+    }
+
+    //show searching face 
+    onMouseDown() {
+        !this.state.boom && this.setState({ searchingFace: true });
+    }
+    //hide searching face 
+    onMouseUp() {
+        this.setState({ searchingFace: false });
     }
 
     render() {
@@ -106,23 +126,29 @@ class Field extends Component {
                 <div className="Field-grid">
                     <div className="Field-menu">
                         <div className="Menu-mines">{String(this.state.mines).padStart(3, '0')}</div>
-                        <button className={`Menu-face ${this.state.boom && 'dead'}`} onClick={this.handleClickMenu} />
+                        <button className={`Menu-face ${this.state.boom && 'dead'} ${this.state.searchingFace && 'search'}`} onClick={this.handleClickMenu} />
                         <div className="Menu-timer">{String(this.state.time).padStart(3, '0')}</div>
                     </div>
                     {this.state.grid.map((el, idx) =>
-                        <div key={`row${idx}`} className={'Field-row'}>{el.map((e, i) =>
-                            <Cell
-                                flagPut={this.flagPut}
-                                handleClick={this.handleClick}
-                                key={`cell${i}`}
-                                dataRow={idx}
-                                dataCell={i}
-                                isRevealed={e.isRevealed}
-                                isFlagged={e.isFlagged}
-                                isBomb={e.isBomb}
-                                isBoom={e.isBoom}
-                                container={e.item}
-                            />)}
+                        <div
+                            //show searching face 
+                            onMouseDown={this.onMouseDown}
+                            onMouseUp={this.onMouseUp}
+                            //
+                            key={`row${idx}`} className={'Field-row'}>{el.map((e, i) =>
+                                <Cell
+                                    flagPut={this.flagPut}
+                                    handleClick={this.handleClick}
+                                    key={`cell${i}`}
+                                    dataRow={idx}
+                                    dataCell={i}
+                                    isRevealed={e.isRevealed}
+                                    isFlagged={e.isFlagged}
+                                    isBomb={e.isBomb}
+                                    isBoom={e.isBoom}
+                                    container={e.item}
+
+                                />)}
                         </div>)}
                 </div>
             </div>
