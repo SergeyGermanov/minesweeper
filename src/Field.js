@@ -19,15 +19,18 @@ class Field extends Component {
             time: 0,
             timer: false,
             level: 'beginner',
-            searchingFace: false
+            searchingFace: false,
+            btnPressed: false,
+            rtBtnPressed: false
         }
 
         this.handleClickMenu = this.handleClickMenu.bind(this);
         this.handleClick = this.handleClick.bind(this);
         this.handleLevel = this.handleLevel.bind(this);
-        this.flagPut = this.flagPut.bind(this);
         this.onMouseDown = this.onMouseDown.bind(this);
         this.onMouseUp = this.onMouseUp.bind(this);
+        this.onMouseLeave = this.onMouseLeave.bind(this);
+        this.onMouseEnter = this.onMouseEnter.bind(this);
     }
 
     //creating new grid and updating it
@@ -69,11 +72,6 @@ class Field extends Component {
         this.updateGrid(level.mines, level.height, level.width);
     }
 
-    handleClick(e) {
-        (!this.state.timer && !this.state.boom) && this.startTimer();
-        !this.state.boom && this.makeVisible(e.target.dataset.row, e.target.dataset.cell);
-    }
-
     levelChange(mines, height, width) {
         this.stopTimer();
         this.setState({ time: 0 });
@@ -85,21 +83,34 @@ class Field extends Component {
         this.levelChange(obj.mines, obj.height, obj.width);
     }
 
+    handleClick(e) {
+
+        e.preventDefault();
+        // if left btn clicked
+        if (e.type === 'click') {
+            (!this.state.timer && !this.state.boom) && this.startTimer();
+            !this.state.boom && this.makeVisible(e.target.dataset.row, e.target.dataset.cell);
+            // if right btn clicked
+        } else if (e.type === 'contextmenu') {
+            this.flagPut(e);
+        }
+    }
     //put flags
     flagPut(e) {
-        e.preventDefault();
         let row = e.target.dataset.row;
         let cell = e.target.dataset.cell;
         let grid = [...this.state.grid];
         let mines = this.state.mines;
         let level = this.state.level;
 
-
+        // minusing mines from the counter
         if (!grid[row][cell].isFlagged && !grid[row][cell].isRevealed) {
             if (mines > 0) {
                 grid[row][cell].isFlagged = true;
                 mines--;
             }
+
+            // adding mines to the counter
         } else if (grid[row][cell].isFlagged && !grid[row][cell].isRevealed) {
             if (mines < this.props[level].mines) {
                 grid[row][cell].isFlagged = false;
@@ -110,12 +121,121 @@ class Field extends Component {
     }
 
     //show searching face 
-    onMouseDown() {
-        !this.state.boom && this.setState({ searchingFace: true });
+    onMouseDown(e) {
+        e.preventDefault();
+        let row = e.target.dataset.row;
+        let cell = e.target.dataset.cell;
+        let grid = [...this.state.grid];
+        if (e.nativeEvent.which === 1) {
+
+            !this.state.boom && this.setState({ searchingFace: true, btnPressed: true });
+
+            if (!grid[row][cell].isFlagged && !grid[row][cell].isRevealed) {
+                grid[row][cell].isPressed = true;
+                this.setState(curState => ({ grid: [...grid] }));
+            }
+
+        } else if (e.nativeEvent.which === 3) {
+
+            // show surrounding cells pressed if 2 btn pressed
+            for (let i = -1; i <= 1; i++) {
+                for (let j = -1; j <= 1; j++) {
+                    let y = +row + i;
+                    let x = +cell + j;
+                    if (y > -1 && y <= grid.length - 1 && x > -1 && x <= grid[y].length - 1) {
+                        let neighbor = grid[y][x];
+                        if (!neighbor.isRevealed && !neighbor.isFlagged) {
+                            neighbor.isPressed = true;
+                        }
+                    }
+                }
+            }
+            this.setState(curState => ({ grid: [...grid], rtBtnPressed: true }));
+        }
+
     }
+
+    onMouseLeave(e) {
+        // pressed button
+        let row = e.target.dataset.row;
+        let cell = e.target.dataset.cell;
+        let grid = [...this.state.grid];
+
+        // cover back one cell
+        if (grid[row][cell].isPressed) {
+            grid[row][cell].isPressed = false;
+        }
+
+        // cover back all cells around
+        if (this.state.rtBtnPressed) {
+            for (let i = -1; i <= 1; i++) {
+                for (let j = -1; j <= 1; j++) {
+                    let y = +row + i;
+                    let x = +cell + j;
+                    if (y > -1 && y <= grid.length - 1 && x > -1 && x <= grid[y].length - 1) {
+                        let neighbor = grid[y][x];
+                        if (!neighbor.isRevealed && !neighbor.isFlagged) {
+                            neighbor.isPressed = false;
+                        }
+                    }
+                }
+            }
+        }
+
+
+        this.setState(curState => ({ grid: [...grid] }));
+    }
+
+    onMouseEnter(e) {
+        // pressed button
+        let row = e.target.dataset.row;
+        let cell = e.target.dataset.cell;
+        let grid = [...this.state.grid];
+
+
+
+        // press surrounding buttons
+        if (this.state.btnPressed && !grid[row][cell].isFlagged) {
+            grid[row][cell].isPressed = true;
+        }
+        if (this.state.rtBtnPressed) {
+            for (let i = -1; i <= 1; i++) {
+                for (let j = -1; j <= 1; j++) {
+                    let y = +row + i;
+                    let x = +cell + j;
+                    if (y > -1 && y <= grid.length - 1 && x > -1 && x <= grid[y].length - 1) {
+                        let neighbor = grid[y][x];
+                        if (!neighbor.isRevealed && !neighbor.isFlagged) {
+                            neighbor.isPressed = true;
+                        }
+                    }
+                }
+            }
+            this.setState(curState => ({ grid: [...grid] }));
+        }
+    }
+
     //hide searching face 
-    onMouseUp() {
-        this.setState({ searchingFace: false });
+    onMouseUp(e) {
+
+        let row = e.target.dataset.row;
+        let cell = e.target.dataset.cell;
+        let grid = [...this.state.grid];
+
+        for (let i = -1; i <= 1; i++) {
+            for (let j = -1; j <= 1; j++) {
+                let y = +row + i;
+                let x = +cell + j;
+                if (y > -1 && y <= grid.length - 1 && x > -1 && x <= grid[y].length - 1) {
+                    let neighbor = grid[y][x];
+                    if (!neighbor.isRevealed && !neighbor.isFlagged) {
+                        neighbor.isPressed = false;
+                    }
+                }
+            }
+        }
+
+        this.setState({ grid: [...grid], searchingFace: false, btnPressed: false, rtBtnPressed: false });
     }
 
     render() {
@@ -131,19 +251,23 @@ class Field extends Component {
                     </div>
                     {this.state.grid.map((el, idx) =>
                         <div
-                            //show searching face 
-                            onMouseDown={this.onMouseDown}
-                            onMouseUp={this.onMouseUp}
-                            //
+
                             key={`row${idx}`} className={'Field-row'}>{el.map((e, i) =>
                                 <Cell
                                     flagPut={this.flagPut}
                                     handleClick={this.handleClick}
+                                    //show searching face 
+                                    onMouseDown={this.onMouseDown}
+                                    onMouseUp={this.onMouseUp}
+                                    onMouseLeave={this.onMouseLeave}
+                                    onMouseEnter={this.onMouseEnter}
+                                    //
                                     key={`cell${i}`}
                                     dataRow={idx}
                                     dataCell={i}
                                     isRevealed={e.isRevealed}
                                     isFlagged={e.isFlagged}
+                                    isPressed={e.isPressed}
                                     isBomb={e.isBomb}
                                     isBoom={e.isBoom}
                                     container={e.item}

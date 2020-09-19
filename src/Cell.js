@@ -20,9 +20,14 @@ class Cell extends Component {
                 data-row={this.props.dataRow}
                 data-cell={this.props.dataCell}
                 onClick={this.props.handleClick}
-                onContextMenu={this.props.flagPut}
+                onContextMenu={this.props.handleClick}
+                onMouseUp={this.props.onMouseUp}
+                onMouseDown={this.props.onMouseDown}
+                onMouseLeave={this.props.onMouseLeave}
+                onMouseEnter={this.props.onMouseEnter}
                 className={`Cell ${this.props.colors[this.props.container]} 
                                  ${this.props.isRevealed && 'uncover'} 
+                                 ${this.props.isPressed && 'uncover'}
                                  ${this.props.isBoom && 'boom'}
                                  ${this.props.isFlagged && 'flagged'}`
                 }

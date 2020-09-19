@@ -65,7 +65,8 @@ function objectGrid(arr) {
         item: e,
         isRevealed: false,
         isBomb: e === '✳',
-        isBoom: false
+        isBoom: false,
+        isPressed: false
     })));
 }
 
