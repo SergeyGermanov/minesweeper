@@ -21,7 +21,9 @@ class Field extends Component {
             level: 'beginner',
             searchingFace: false,
             btnPressed: false,
-            rtBtnPressed: false
+            rtBtnPressed: false,
+            win: false,
+            active: [false, false]
         }
 
         this.handleClickMenu = this.handleClickMenu.bind(this);
@@ -86,12 +88,12 @@ class Field extends Component {
     handleClick(e) {
 
         e.preventDefault();
-        // if left btn clicked
-        if (e.type === 'click') {
+
+        if (e.button === 0) {
             (!this.state.timer && !this.state.boom) && this.startTimer();
             !this.state.boom && this.makeVisible(e.target.dataset.row, e.target.dataset.cell);
             // if right btn clicked
-        } else if (e.type === 'contextmenu') {
+        } else if (e.button === 2) {
             this.flagPut(e);
         }
     }
@@ -117,27 +119,39 @@ class Field extends Component {
                 mines++;
             }
         }
+
         this.setState(curState => ({ grid: [...grid], mines: mines }));
     }
 
     //show searching face 
     onMouseDown(e) {
         e.preventDefault();
+
+
+        // keep track if the button is pressed or both
+        if (e.button === 0) {
+            this.setState(curState => ({ active: [true, curState.active[1]] }));
+        } else if (e.button === 2) {
+            this.setState(curState => ({ active: [curState.active[0], true] }));
+        }
+
+
         let row = e.target.dataset.row;
         let cell = e.target.dataset.cell;
         let grid = [...this.state.grid];
-        if (e.nativeEvent.which === 1) {
 
-            !this.state.boom && this.setState({ searchingFace: true, btnPressed: true });
+        if (e.button === 0) {
+
+            !this.state.boom && this.setState(curState => ({ searchingFace: true, btnPressed: true }));
 
             if (!grid[row][cell].isFlagged && !grid[row][cell].isRevealed) {
                 grid[row][cell].isPressed = true;
                 this.setState(curState => ({ grid: [...grid] }));
             }
 
-        } else if (e.nativeEvent.which === 3) {
+        } else if (e.button === 1) {
 
-            // show surrounding cells pressed if 2 btn pressed
+            // show surrounding cells pressed if middel btn pressed
             for (let i = -1; i <= 1; i++) {
                 for (let j = -1; j <= 1; j++) {
                     let y = +row + i;
@@ -218,6 +232,14 @@ class Field extends Component {
     //hide searching face 
     onMouseUp(e) {
 
+        // keep track if the button is pressed or both
+        if (e.button === 0) {
+            this.setState(curState => ({ active: [false, curState.active[1]] }));
+        } else if (e.button === 2) {
+            this.setState(curState => ({ active: [curState.active[0], false] }));
+        }
+
+
         let row = e.target.dataset.row;
         let cell = e.target.dataset.cell;
         let grid = [...this.state.grid];
@@ -236,7 +258,9 @@ class Field extends Component {
         }
 
         this.setState({ grid: [...grid], searchingFace: false, btnPressed: false, rtBtnPressed: false });
+
     }
+
 
     render() {
         return (
@@ -275,6 +299,7 @@ class Field extends Component {
                                 />)}
                         </div>)}
                 </div>
+                <p>{this.state.win && 'won!'}</p>
             </div>
         );
     }
